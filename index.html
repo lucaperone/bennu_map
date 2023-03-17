@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="css/pico.min.css" />
+        <link rel="stylesheet" href="css/styles.css" />
+        <title>Hello, world!</title>
+    </head>
+    <body>
+        <main id="main">
+            <canvas id="map"></canvas>
+        </main>
+        <aside id="sidebar" class="active">
+            <button
+                class="secondary outline"
+                id="toggle"
+                onclick="document.getElementById('sidebar').classList.toggle('active')"
+                role="button"
+            >
+                ☰
+            </button>
+            <label for="algorithm">Algorithm</label>
+            <select id="algorithm" class="parameter">
+                <option value="ring" selected>Ring based</option>
+            </select>
+            <label for="seed">
+                <small>Seed</small>
+                <input
+                    type="text"
+                    id="seed"
+                    class="parameter"
+                    name="seed"
+                    value="42"
+                    placeholder="Seed"
+                />
+            </label>
+            <label for="players"
+                ><small>Number of players</small>
+                <output>1</output>
+                <input
+                    type="range"
+                    min="1"
+                    max="4"
+                    value="1"
+                    id="players"
+                    class="parameter"
+                    name="players"
+                    oninput="this.previousElementSibling.value = this.value"
+                />
+            </label>
+            <label for="scale"
+                ><small>Scale</small>
+                <output>1</output>
+                <input
+                    type="range"
+                    min="1"
+                    max="10"
+                    step="0.1"
+                    value="1"
+                    id="scale"
+                    class="parameter"
+                    name="scale"
+                    oninput="this.previousElementSibling.value = this.value"
+                />
+            </label>
+            <label for="rings"
+                ><small>Number of rings</small>
+                <output>4</output>
+                <input
+                    type="range"
+                    min="1"
+                    max="8"
+                    value="4"
+                    id="rings"
+                    class="parameter"
+                    name="rings"
+                    oninput="this.previousElementSibling.value = this.value"
+                />
+            </label>
+            <label for="obelisks"
+                ><small>Number of obelisks by ring</small>
+                <output>4</output>
+                <input
+                    type="range"
+                    min="1"
+                    max="8"
+                    value="4"
+                    id="obelisks"
+                    class="parameter"
+                    name="obelisks"
+                    oninput="this.previousElementSibling.value = this.value"
+                />
+            </label>
+        </aside>
+        <script src="js/script.js"></script>
+    </body>
+</html>
