@@ -8,91 +8,207 @@
         <title>Hello, world!</title>
     </head>
     <body>
-        <main id="main">
-            <canvas id="map"></canvas>
-        </main>
         <aside id="sidebar" class="active">
-            <button
+            <!-- <button
                 class="secondary outline"
                 id="toggle"
                 onclick="document.getElementById('sidebar').classList.toggle('active')"
                 role="button"
             >
                 ☰
-            </button>
-            <label for="algorithm">Algorithm</label>
-            <select id="algorithm" class="parameter">
-                <option value="ring" selected>Ring based</option>
-            </select>
-            <label for="seed">
-                <small>Seed</small>
-                <input
-                    type="text"
-                    id="seed"
-                    class="parameter"
-                    name="seed"
-                    value="42"
-                    placeholder="Seed"
-                />
-            </label>
-            <label for="players"
-                ><small>Number of players</small>
-                <output>1</output>
-                <input
-                    type="range"
-                    min="1"
-                    max="4"
-                    value="1"
-                    id="players"
-                    class="parameter"
-                    name="players"
-                    oninput="this.previousElementSibling.value = this.value"
-                />
-            </label>
-            <label for="scale"
-                ><small>Scale</small>
-                <output>1</output>
-                <input
-                    type="range"
-                    min="1"
-                    max="10"
-                    step="0.1"
-                    value="1"
-                    id="scale"
-                    class="parameter"
-                    name="scale"
-                    oninput="this.previousElementSibling.value = this.value"
-                />
-            </label>
-            <label for="rings"
-                ><small>Number of rings</small>
-                <output>4</output>
-                <input
-                    type="range"
-                    min="1"
-                    max="8"
-                    value="4"
-                    id="rings"
-                    class="parameter"
-                    name="rings"
-                    oninput="this.previousElementSibling.value = this.value"
-                />
-            </label>
-            <label for="obelisks"
-                ><small>Number of obelisks by ring</small>
-                <output>4</output>
-                <input
-                    type="range"
-                    min="1"
-                    max="8"
-                    value="4"
-                    id="obelisks"
-                    class="parameter"
-                    name="obelisks"
-                    oninput="this.previousElementSibling.value = this.value"
-                />
-            </label>
+            </button> -->
+            <div id="parameters">
+                <h3>Setup</h3>
+                <label for="algorithm"><small>Algorithm</small></label>
+                <select id="algorithm" class="parameter">
+                    <option value="ring" selected>Ring based</option>
+                </select>
+                <label for="seed">
+                    <small>Seed</small>
+                    <input
+                        type="number"
+                        id="seed"
+                        class="parameter"
+                        name="seed"
+                        value="42"
+                        placeholder="Seed"
+                    />
+                </label>
+                <label for="scale"
+                    ><small>Scale</small>
+                    <output>3</output>
+                    <input
+                        type="range"
+                        min="1"
+                        max="10"
+                        step="0.1"
+                        value="3"
+                        id="scale"
+                        class="parameter"
+                        name="scale"
+                        oninput="this.previousElementSibling.value = this.value"
+                    />
+                </label>
+                <label for="debug">
+                    <input
+                        type="checkbox"
+                        id="debug"
+                        class="parameter"
+                        name="debug"
+                        role="switch"
+                        checked
+                    />
+                    Debug view
+                </label>
+                <br />
+                <hr />
+                <br />
+                <h3>Players</h3>
+                <label for="players"
+                    ><small>Number of players</small>
+                    <output>1</output>
+                    <input
+                        type="range"
+                        min="1"
+                        max="4"
+                        value="1"
+                        id="players"
+                        class="parameter"
+                        name="players"
+                        oninput="this.previousElementSibling.value = this.value"
+                    />
+                </label>
+                <label for="influence"
+                    ><small>Influence of party size</small>
+                    <output>2</output>
+                    <input
+                        type="range"
+                        min="0"
+                        max="10"
+                        value="2"
+                        id="influence"
+                        class="parameter"
+                        name="influence"
+                        oninput="this.previousElementSibling.value = this.value"
+                    />
+                </label>
+                <br />
+                <hr />
+                <br />
+                <h3>Spawning zone</h3>
+                <label for="padding"
+                    ><small>Padding (%)</small>
+                    <output>5</output>
+                    <input
+                        type="range"
+                        min="0"
+                        max="50"
+                        value="5"
+                        id="padding"
+                        class="parameter"
+                        name="padding"
+                        oninput="this.previousElementSibling.value = this.value"
+                    />
+                </label>
+                <label for="min_dist"
+                    ><small>Min distance from pyramid</small>
+                    <output>100</output>
+                    <input
+                        type="range"
+                        min="0"
+                        max="400"
+                        value="100"
+                        id="min_dist"
+                        class="parameter"
+                        name="min_dist"
+                        oninput="this.previousElementSibling.value = this.value"
+                    />
+                </label>
+                <label for="max_dist"
+                    ><small>Max distance from pyramid</small>
+                    <output>500</output>
+                    <input
+                        type="range"
+                        min="0"
+                        max="1200"
+                        value="500"
+                        id="max_dist"
+                        class="parameter"
+                        name="max_dist"
+                        oninput="this.previousElementSibling.value = this.value"
+                    />
+                </label>
+                <br />
+                <hr />
+                <br />
+                <h3>Rings algorithm</h3>
+                <label for="rings"
+                    ><small>Number of rings</small>
+                    <output>5</output>
+                    <input
+                        type="range"
+                        min="1"
+                        max="10"
+                        value="5"
+                        id="rings"
+                        class="parameter"
+                        name="rings"
+                        oninput="this.previousElementSibling.value = this.value"
+                    />
+                </label>
+                <label for="obelisks"
+                    ><small>Number of obelisks by ring</small>
+                    <output>5</output>
+                    <input
+                        type="range"
+                        min="1"
+                        max="10"
+                        value="5"
+                        id="obelisks"
+                        class="parameter"
+                        name="obelisks"
+                        oninput="this.previousElementSibling.value = this.value"
+                    />
+                </label>
+                <label for="intra"
+                    ><small>Intra-ring links density</small>
+                    <output>3</output>
+                    <input
+                        type="range"
+                        min="1"
+                        max="10"
+                        step="0.1"
+                        value="3"
+                        id="intra"
+                        class="parameter"
+                        name="intra"
+                        oninput="this.previousElementSibling.value = this.value"
+                    />
+                </label>
+                <label for="inter"
+                    ><small>Inter-ring links density</small>
+                    <output>3</output>
+                    <input
+                        type="range"
+                        min="1"
+                        max="10"
+                        step="0.1"
+                        value="3"
+                        id="inter"
+                        class="parameter"
+                        name="inter"
+                        oninput="this.previousElementSibling.value = this.value"
+                    />
+                </label>
+            </div>
         </aside>
+        <main id="main">
+            <canvas id="map"></canvas>
+        </main>
+        <script src="js/libraries/chance.min.js"></script>
+        <script src="js/components/pyramid.js"></script>
+        <script src="js/components/obelisk.js"></script>
+        <script src="js/components/map.js"></script>
         <script src="js/script.js"></script>
     </body>
 </html>
