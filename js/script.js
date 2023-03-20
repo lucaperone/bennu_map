@@ -1,7 +1,5 @@
 // Constants
-const width = 1920,
-    height = 1080,
-    bg_color = "#161e23",
+const bg_color = "#161e23",
     pyramid_color = "#f5b963",
     pyramid_size = 15,
     obelisk_color = "#e3e5e2",
@@ -18,6 +16,8 @@ const width = 1920,
 // Variables
 let algorithm,
     seed,
+    width,
+    height,
     scale,
     debug_padding,
     debug_distances,
@@ -43,6 +43,8 @@ function draw() {
     // - Setup
     algorithm = get("algorithm").value
     seed = get("seed").value
+    width = get("width").value
+    height = get("height").value
     scale = parseFloat(get("scale").value)
     // - Debug
     debug_padding = get("debug_padding").checked
@@ -70,6 +72,7 @@ function draw() {
     var canvas = get("map")
     canvas.width = width
     canvas.height = height
+    canvas.style.aspectRatio = `${width} / ${height}`
     var ctx = canvas.getContext("2d")
 
     const map = new Map(width, height, seed, players)
