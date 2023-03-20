@@ -15,7 +15,9 @@ body > main {
 }
 canvas#map {
     background-color: rgb(255 255 255 / 2%);
-    width: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    aspect-ratio: 16/9;
 }
 
 aside#sidebar {
