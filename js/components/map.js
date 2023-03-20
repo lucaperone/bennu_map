@@ -1,13 +1,50 @@
+function square(ctx, x, y, s, c) {
+    ctx.fillStyle = c
+    s *= scale
+    ctx.fillRect(x - s / 2, y - s / 2, s, s)
+}
+
+function disk(ctx, x, y, r, c) {
+    const prevStyle = ctx.fillStyle
+    ctx.beginPath()
+    ctx.fillStyle = c
+    ctx.arc(x, y, r, 0, 2 * Math.PI)
+    ctx.fill()
+    ctx.strokeStyle = prevStyle
+}
+
+function circle(ctx, x, y, r, s, c) {
+    const prevStyle = ctx.strokeStyle
+    const prevWidth = ctx.lineWidth
+    ctx.beginPath()
+    ctx.strokeStyle = c
+    ctx.lineWidth = s
+    ctx.arc(x, y, r, 0, 2 * Math.PI)
+    ctx.stroke()
+    ctx.strokeStyle = prevStyle
+    ctx.lineWidth = prevWidth
+}
+
+function line(ctx, x1, y1, x2, y2, s, c) {
+    const prevStyle = ctx.strokeStyle
+    const prevWidth = ctx.lineWidth
+    ctx.strokeStyle = c
+    ctx.lineWidth = s * scale
+    ctx.beginPath()
+    ctx.moveTo(x1, y1)
+    ctx.lineTo(x2, y2)
+    ctx.stroke()
+    ctx.strokeStyle = prevStyle
+    ctx.lineWidth = prevWidth
+}
+
 class Map {
     constructor(w, h, s, p) {
         this.w = w
         this.h = h
         this.s = s
         this.p = p
-        this.pyramid = new Pyramid(
-            (this.w - pyramid_size * scale) / 2,
-            (this.h - pyramid_size * scale) / 2
-        )
+        this.pyramid = new Pyramid(this.w / 2, this.h / 2)
         this.obelisks = []
         this.adjacency = []
 
@@ -23,64 +60,110 @@ class Map {
                     min_dist +
                     ring * ring_size +
                     random.floating({ min: 0, max: ring_size })
-                const angle = random.floating({ min: 0, max: 2 * Math.PI })
-                const x = this.w / 2 + Math.cos(angle) * mag
-                const y = this.h / 2 + Math.sin(angle) * mag
+                let x,
+                    y,
+                    found = false
+                for (let step = 0; step < max_steps; step++) {
+                    const angle = random.floating({ min: 0, max: 2 * Math.PI })
+                    x = this.w / 2 + Math.cos(angle) * mag
+                    y = this.h / 2 + Math.sin(angle) * mag
+                    if (
+                        !this.obelisks.some(
+                            (obelisk) =>
+                                (x - obelisk.x) ** 2 + (y - obelisk.y) ** 2 <
+                                min_spacing ** 2
+                        )
+                    ) {
+                        found = true
+                        break
+                    }
+                }
+                // FIXME: for else ?
 
                 if (
+                    found &&
                     x >= this.w * padding &&
                     x <= this.w * (1 - padding) &&
                     y >= this.h * padding &&
                     y <= this.h * (1 - padding)
                 ) {
-                    this.obelisks.push(new Obelisk(x, y))
+                    this.obelisks.push(new Obelisk(x, y, ring))
+                } else {
+                    console.log("Not found")
                 }
             }
         }
 
-        // TODO: use link density
-        // TODO: link density intra and inter link
+        // FIXME: prefill array ?
         const n = this.obelisks.length
         this.adjacency = []
-        for (let _ = 0; _ < n; _++) {
+        for (let i = 0; i < n; i++) {
             const row = []
-            for (let _ = 0; _ < n; _++) {
-                row.push(random.integer({ min: 0, max: 1 }))
+            for (let j = 0; j < n; j++) {
+                if (i >= j) {
+                    row.push(false)
+                    continue
+                }
+
+                const d2 =
+                    (this.obelisks[i].x - this.obelisks[j].x) ** 2 +
+                    (this.obelisks[i].x - this.obelisks[j].x) ** 2
+                if (d2 > max_link_length ** 2) {
+                    row.push(false)
+                    continue
+                }
+
+                const d = Math.sqrt(d2)
+                const rand = random.floating({ min: 0, max: 2 })
+                const threshold = (d / max_link_length) * distance_influence
+
+                if (
+                    this.obelisks[i].ring == this.obelisks[j].ring &&
+                    rand < intra_density + threshold
+                ) {
+                    {
+                        row.push(true)
+                        continue
+                    }
+                } else if (
+                    this.obelisks[i].ring != this.obelisks[j].ring &&
+                    rand < inter_density + threshold
+                ) {
+                    {
+                        row.push(true)
+                        continue
+                    }
+                }
+                row.push(false)
             }
             this.adjacency.push(row)
         }
     }
 
     draw(ctx, debug) {
-        if (debug) {
+        // Distances from pyramid
+        if (debug.distances) {
             // Maximum distance
-            ctx.beginPath()
-            ctx.fillStyle = spawn_color
-            ctx.arc(this.w / 2, this.h / 2, max_dist, 0, 2 * Math.PI)
-            ctx.fill()
+            disk(ctx, this.w / 2, this.h / 2, max_dist, spawn_color)
 
             // Minimum distance
-            ctx.beginPath()
-            ctx.fillStyle = no_spawn_color
-            ctx.arc(this.w / 2, this.h / 2, min_dist, 0, 2 * Math.PI)
-            ctx.fill()
+            disk(ctx, this.w / 2, this.h / 2, min_dist, no_spawn_color)
 
             // Rings
             for (let i = 1; i < rings; i++) {
-                ctx.beginPath()
-                ctx.strokeStyle = bg_color
-                ctx.lineWidth = 3
-                ctx.arc(
+                circle(
+                    ctx,
                     this.w / 2,
                     this.h / 2,
                     min_dist + i * ring_size,
-                    0,
-                    2 * Math.PI
+                    ring_width,
+                    bg_color
                 )
-                ctx.stroke()
             }
+        }
 
-            // Padding
+        // Padding
+        if (debug.padding) {
             ctx.fillStyle = no_spawn_color
             ctx.fillRect(0, 0, this.w, this.h * padding)
             ctx.fillRect(0, this.h, this.w, -this.h * padding)
@@ -88,40 +171,47 @@ class Map {
             ctx.fillRect(this.w, 0, -this.w * padding, this.h)
         }
 
+        // Spacing
+        if (debug.spacing) {
+            for (const obelisk of this.obelisks) {
+                disk(ctx, obelisk.x, obelisk.y, min_spacing, no_spawn_color)
+            }
+            for (const obelisk of this.obelisks) {
+                circle(
+                    ctx,
+                    obelisk.x,
+                    obelisk.y,
+                    min_spacing / 2,
+                    range_width,
+                    range_color
+                )
+            }
+        }
+
+        // Links
+        const n = this.obelisks.length
+        for (let i = 0; i < n; i++) {
+            for (let j = 0; j < n; j++) {
+                if (this.adjacency[i][j]) {
+                    line(
+                        ctx,
+                        this.obelisks[i].x,
+                        this.obelisks[i].y,
+                        this.obelisks[j].x,
+                        this.obelisks[j].y,
+                        link_size,
+                        link_color
+                    )
+                }
+            }
+        }
+
         // Pyramid
         this.pyramid.draw(ctx)
 
         // Obelisks
-        this.obelisks.forEach((obelisk) => {
+        for (const obelisk of this.obelisks) {
             obelisk.draw(ctx)
-        })
+        }
     }
 }
-
-// from obelisk import Obelsik
-// from pyramid import Pyramid
-// import random
-
-// MULTIPLIER = 2
-
-// class Map:
-//     def __init__(self, w, h, p, s):
-//         self.w: int = w  # Width
-//         self.h: int = h  # Height
-//         self.p: int = p  # Number of players
-//         self.s: int = s  # seed
-//         self.pyramid: Pyramid = Pyramid(w / 2, h / 2)
-//         self.obelisks: list[Obelsik] = []
-//         self.adjacency: list[list[int]] = []
-
-//         self.generate(self.s)
-
-//     def generate(self, seed):
-//         random.seed = seed
-//         n = self.p * MULTIPLIER
-//         for _ in range(n):
-//             self.obelisks.append(
-//                 Obelsik(random.uniform(0.0, self.w), random.uniform(0.0, self.h))
-//             )
-
-//         self.adjacency = [[random.randint(0, 1) for _ in range(n)] for _ in range(n)]

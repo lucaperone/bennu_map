@@ -5,7 +5,6 @@ class Pyramid {
     }
 
     draw(ctx) {
-        ctx.fillStyle = pyramid_color
-        ctx.fillRect(this.x, this.y, pyramid_size * scale, pyramid_size * scale)
+        square(ctx, this.x, this.y, pyramid_size, pyramid_color)
     }
 }

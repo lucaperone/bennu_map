@@ -1,11 +1,11 @@
 class Obelisk {
-    constructor(x, y) {
+    constructor(x, y, ring) {
         this.x = x
         this.y = y
+        this.ring = ring
     }
 
     draw(ctx) {
-        ctx.fillStyle = obelisk_color
-        ctx.fillRect(this.x, this.y, obelisk_size * scale, obelisk_size * scale)
+        square(ctx, this.x, this.y, obelisk_size, obelisk_color)
     }
 }
