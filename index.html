@@ -113,17 +113,31 @@
                 <hr />
                 <br />
                 <h3>Spawning zone</h3>
-                <label for="padding"
-                    ><small>Padding (%)</small>
+                <label for="padding_x"
+                    ><small>Horizontal padding (%)</small>
                     <output>5</output>
                     <input
                         type="range"
                         min="0"
                         max="50"
                         value="5"
-                        id="padding"
+                        id="padding_x"
                         class="parameter"
-                        name="padding"
+                        name="padding_x"
+                        oninput="this.previousElementSibling.value = this.value"
+                    />
+                </label>
+                <label for="padding_y"
+                    ><small>Vertical padding (%)</small>
+                    <output>5</output>
+                    <input
+                        type="range"
+                        min="0"
+                        max="50"
+                        value="5"
+                        id="padding_y"
+                        class="parameter"
+                        name="padding_y"
                         oninput="this.previousElementSibling.value = this.value"
                     />
                 </label>

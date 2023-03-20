@@ -82,10 +82,10 @@ class Map {
 
                 if (
                     found &&
-                    x >= this.w * padding &&
-                    x <= this.w * (1 - padding) &&
-                    y >= this.h * padding &&
-                    y <= this.h * (1 - padding)
+                    x >= this.w * padding_x &&
+                    x <= this.w * (1 - padding_x) &&
+                    y >= this.h * padding_y &&
+                    y <= this.h * (1 - padding_y)
                 ) {
                     this.obelisks.push(new Obelisk(x, y, ring))
                 }
@@ -168,10 +168,10 @@ class Map {
         // Padding
         if (debug.padding) {
             ctx.fillStyle = no_spawn_color
-            ctx.fillRect(0, 0, this.w, this.h * padding)
-            ctx.fillRect(0, this.h, this.w, -this.h * padding)
-            ctx.fillRect(0, 0, this.w * padding, this.h)
-            ctx.fillRect(this.w, 0, -this.w * padding, this.h)
+            ctx.fillRect(0, 0, this.w, this.h * padding_y)
+            ctx.fillRect(0, this.h, this.w, -this.h * padding_y)
+            ctx.fillRect(0, 0, this.w * padding_x, this.h)
+            ctx.fillRect(this.w, 0, -this.w * padding_x, this.h)
         }
 
         // Spacing

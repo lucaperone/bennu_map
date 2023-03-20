@@ -26,7 +26,8 @@ let algorithm,
     players_influence,
     rings,
     obelisks,
-    padding,
+    padding_x,
+    padding_y,
     min_dist,
     max_dist,
     min_spacing,
@@ -51,7 +52,8 @@ function draw() {
     players = get("players").value
     players_influence = get("players_influence").value
     // - Spawning zone
-    padding = get("padding").value / 100
+    padding_x = get("padding_x").value / 100
+    padding_y = get("padding_y").value / 100
     min_dist = parseFloat(get("min_dist").value)
     max_dist = parseFloat(get("max_dist").value)
     min_spacing = parseFloat(get("min_spacing").value)
