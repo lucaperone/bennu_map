@@ -88,8 +88,6 @@ class Map {
                     y <= this.h * (1 - padding)
                 ) {
                     this.obelisks.push(new Obelisk(x, y, ring))
-                } else {
-                    console.log("Not found")
                 }
             }
         }
@@ -107,7 +105,7 @@ class Map {
 
                 const d2 =
                     (this.obelisks[i].x - this.obelisks[j].x) ** 2 +
-                    (this.obelisks[i].x - this.obelisks[j].x) ** 2
+                    (this.obelisks[i].y - this.obelisks[j].y) ** 2
                 if (d2 > max_link_length ** 2) {
                     row.push(false)
                     continue
@@ -117,9 +115,14 @@ class Map {
                 const rand = random.floating({ min: 0, max: 2 })
                 const threshold = (d / max_link_length) * distance_influence
 
+                if (rand < threshold) {
+                    row.push(false)
+                    continue
+                }
+
                 if (
                     this.obelisks[i].ring == this.obelisks[j].ring &&
-                    rand < intra_density + threshold
+                    rand < intra_density
                 ) {
                     {
                         row.push(true)
@@ -127,7 +130,7 @@ class Map {
                     }
                 } else if (
                     this.obelisks[i].ring != this.obelisks[j].ring &&
-                    rand < inter_density + threshold
+                    rand < inter_density
                 ) {
                     {
                         row.push(true)
